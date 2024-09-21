@@ -1,20 +1,12 @@
 const { app, BrowserWindow } = require('electron')
 const path = require('node:path')
+const fs = require('fs')
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
   app.quit()
 }
-
 const createWindow = () => {
-  // Create the browser window.
-  // const mainWindow = new BrowserWindow({
-  //   width: 800,
-  //   height: 600,
-  //   webPreferences: {
-  //     preload: path.join(__dirname, 'preload.js'),
-  //   },
-  // });
   const win = new BrowserWindow({
     show: true,
     // icon: "icon/logoicon.ico",
@@ -24,17 +16,22 @@ const createWindow = () => {
       contextIsolation: false,
       enableRemoteModule: true,
       sandbox: false,
-      webSecurity: false, // needed to load local images
+      webSecurity: true,
       preload: path.join(__dirname, 'preload.js')
     }
   })
+
   win.setMenuBarVisibility(false)
   win.loadURL('https://deadshot.io')
-  // and load the index.html of the app.
-  // mainWindow.loadFile(path.join(__dirname, 'index.html'));
+  // Ensure the title remains "Tremor DSC" after the page has loaded
+  win.webContents.on('did-finish-load', () => {
+    console.log('finished loading')
+    win.setTitle('Tremor DSC')
+    win.webContents.send('status', true)
+  })
 
   // Open the DevTools.
-  // mainWindow.webContents.openDevTools();
+  win.webContents.openDevTools()
 }
 
 // This method will be called when Electron has finished
