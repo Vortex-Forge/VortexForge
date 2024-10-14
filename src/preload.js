@@ -4,7 +4,7 @@
 // https://www.electronjs.org/docs/latest/tutorial/process-model#preload-scripts
 
 const { addStatsDiv, stats, addFontLinks } = require('./components/stats')
-const { ipcRenderer } = require('electron')
+const { ipcRenderer, contextBridge } = require('electron')
 // adBlocker (for devs only)
 
 function blockAds() {
@@ -41,18 +41,18 @@ document.addEventListener('DOMContentLoaded', function () {
         console.error('Error in blockAds:', error)
       }
 
-      try {
-        addStatsDiv()
-      } catch (error) {
-        console.error('Error in addStatsDiv:', error)
-      }
+      // try {
+      //   addStatsDiv()
+      // } catch (error) {
+      //   console.error('Error in addStatsDiv:', error)
+      // }
 
-      try {
-        console.log('running stats')
-        stats()
-      } catch (error) {
-        console.error('Error in stats:', error)
-      }
+      // try {
+      //   console.log('running stats')
+      //   stats()
+      // } catch (error) {
+      //   console.error('Error in stats:', error)
+      // }
     }
   })
 })
