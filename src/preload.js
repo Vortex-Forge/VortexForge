@@ -5,6 +5,7 @@
 
 const { addStatsDiv, stats, addFontLinks } = require('./components/stats')
 const { ipcRenderer, contextBridge } = require('electron')
+const { getPing } = require('./components/statsLogic')
 // adBlocker (for devs only)
 
 function blockAds() {
@@ -41,18 +42,19 @@ document.addEventListener('DOMContentLoaded', function () {
         console.error('Error in blockAds:', error)
       }
 
-      // try {
-      //   addStatsDiv()
-      // } catch (error) {
-      //   console.error('Error in addStatsDiv:', error)
-      // }
+      try {
+        addStatsDiv()
+      } catch (error) {
+        console.error('Error in addStatsDiv:', error)
+      }
 
-      // try {
-      //   console.log('running stats')
-      //   stats()
-      // } catch (error) {
-      //   console.error('Error in stats:', error)
-      // }
+      try {
+        console.log('running stats')
+        stats()
+        getPing()
+      } catch (error) {
+        console.error('Error in stats:', error)
+      }
     }
   })
 })

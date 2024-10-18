@@ -2,10 +2,13 @@ const { app, BrowserWindow, ipcMain, protocol } = require('electron')
 const path = require('path')
 const fs = require('fs')
 const { replaceResources } = require('./components/swapper')
+const si = require('systeminformation')
+
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
   app.quit()
 }
+
 // let win = null;
 const createWindow = () => {
   win = new BrowserWindow({
@@ -42,14 +45,14 @@ const createWindow = () => {
 app.whenReady().then(() => {
   let win = createWindow()
   console.log('app is ready, going to replace resources')
+
   // Register a custom protocol to serve local files
   protocol.handle('local', async (request) => {
+    console.log('inside local protocol')
+
     const url = request.url.substring(8) // Remove 'local://' prefix
-    const localFilePath = path.join(
-      __dirname,
-      '../swapDir/skins/compressed',
-      url
-    )
+    console.log(url, 'url')
+    const localFilePath = path.join(__dirname, '../swapDir', url)
     console.log(`Serving local file: ${localFilePath}`)
 
     try {
@@ -65,20 +68,41 @@ app.whenReady().then(() => {
 
   // Intercept requests and redirect to local protocol
   const filter = {
-    urls: ['https://deadshot.io/skins/compressed/defaultar.webp']
+    urls: ['*://deadshot.io/skins/compressed/*.webp']
   }
 
   win.webContents.session.webRequest.onBeforeRequest(
     filter,
     (details, callback) => {
-      const newUrl = details.url.replace(
-        'https://deadshot.io/skins/compressed/defaultar.webp',
-        'local://defaultar.webp'
+      const localFilePath = path.join(
+        __dirname,
+        '../swapDir/',
+        new URL(details.url).pathname
       )
-      console.log(`Redirecting to: ${newUrl}`)
-      callback({ redirectURL: newUrl })
+      // console.log(localFilePath, 'localFilePath')
+      // Check if the file exists
+      if (fs.existsSync(localFilePath)) {
+        console.log('file found', localFilePath)
+        const fileUrl = `local://${new URL(details.url).pathname}`
+        console.log(`Redirect URL: ${fileUrl}`)
+        callback({ redirectURL: fileUrl })
+      } else {
+        // console.error(`File does not exist: ${localFilePath}`)
+        callback({ cancel: false })
+      }
     }
   )
+
+  //sending stats from the main to rendrer process
+  setInterval(async () => {
+    try {
+      const memoryData = await process.getProcessMemoryInfo()
+      const memoryUsed = Math.round(memoryData.residentSet / 1024)
+      win.webContents.send('memory', memoryUsed)
+    } catch (e) {
+      console.error(e)
+    }
+  }, 1000)
 
   // On OS X it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.

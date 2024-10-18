@@ -3,7 +3,7 @@ const path = require('path')
 const fs = require('fs')
 const replaceResources = (win, app) => {
   const filter = {
-    urls: ['https://deadshot.io/skins/compressed/defaultar.webp']
+    urls: ['*://deadshot.io/skins/compressed/*.webp']
   }
 
   win.webContents.session.webRequest.onBeforeRequest(
@@ -12,8 +12,8 @@ const replaceResources = (win, app) => {
       console.log(details)
       const localFilePath = path.join(
         __dirname,
-        '../../swapDir/skins/compressed',
-        'defaultar.webp'
+        '../../swapDir/',
+        new URL(details.url).pathname
       )
 
       // Check if the file exists

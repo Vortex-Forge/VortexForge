@@ -1,7 +1,6 @@
 // this file contains logic for calculating varoius stats
 
 const ping_get = require('ping')
-const { ipcMain } = require('electron')
 
 let frameCount = 0
 let lastFrameTime = performance.now()
@@ -17,8 +16,7 @@ function getFps() {
     lastFrameTime = now
     document.getElementById('fps').innerText = fps
   }
-
-  return fps
+  requestAnimationFrame(getFps)
 }
 
 function getMemory() {
@@ -30,7 +28,7 @@ function getMemory() {
   return memory
 }
 
-function getPing(mainWindow) {
+function getPing() {
   setInterval(() => {
     const host = 'deadshot.io'
 
