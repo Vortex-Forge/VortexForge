@@ -14,7 +14,8 @@ const createWindow = () => {
   win = new BrowserWindow({
     show: true,
     // icon: "icon/logoicon.ico",
-    title: 'Tremor DSC',
+    title: 'VortexForge',
+    fullscreen: true,
     webPreferences: {
       //nodeIntegration: false,
       contextIsolation: false,
@@ -30,12 +31,12 @@ const createWindow = () => {
   // Ensure the title remains "Tremor DSC" after the page has loaded
   win.webContents.on('did-finish-load', () => {
     console.log('finished loading')
-    win.setTitle('Tremor DSC')
+    win.setTitle('VortexForge')
     win.webContents.send('status', true)
   })
 
   // Open the DevTools.
-  win.webContents.openDevTools()
+  // win.webContents.openDevTools()
   return win
 }
 
@@ -44,11 +45,11 @@ const createWindow = () => {
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
   let win = createWindow()
-  console.log('app is ready, going to replace resources')
+  console.log('App is ready, going to replace resources')
 
   // Register a custom protocol to serve local files
   protocol.handle('local', async (request) => {
-    console.log('inside local protocol')
+    console.log('Inside local protocol')
 
     const url = request.url.substring(8) // Remove 'local://' prefix
     console.log(url, 'url')
