@@ -36,7 +36,7 @@ const createWindow = () => {
   })
 
   // Open the DevTools.
-  // win.webContents.openDevTools()
+  win.webContents.openDevTools()
   return win
 }
 
@@ -69,7 +69,7 @@ app.whenReady().then(() => {
 
   // Intercept requests and redirect to local protocol
   const filter = {
-    urls: ['*://deadshot.io/skins/compressed/*.webp']
+    urls: ['*://deadshot.io/weapons/awp/*.webp', '*://deadshot.io/skins/compressed/*.webp', '*://deadshot.io/promo/*.webp', '*://deadshot.io/textures/*.webp'],
   }
 
   win.webContents.session.webRequest.onBeforeRequest(
