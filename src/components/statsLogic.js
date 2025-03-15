@@ -1,4 +1,4 @@
-// this file contains logic for calculating varoius stats
+// this file contains logic for calculating various stats
 
 const ping_get = require('ping')
 

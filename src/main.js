@@ -28,14 +28,13 @@ const createWindow = () => {
 
   win.setMenuBarVisibility(false)
   win.loadURL('https://deadshot.io')
-  // Ensure the title remains "Tremor DSC" after the page has loaded
+  // Ensure the title remains "VortexForge" after the page has loaded
   win.webContents.on('did-finish-load', () => {
     console.log('finished loading')
     win.setTitle('VortexForge')
     win.webContents.send('status', true)
   })
 
-  // Open the DevTools.
   // win.webContents.openDevTools()
   return win
 }
@@ -46,7 +45,7 @@ const createWindow = () => {
 app.whenReady().then(() => {
   let win = createWindow()
   console.log('App is ready, going to replace resources')
-
+  win.webContents.openDevTools(); 
   // Register a custom protocol to serve local files
   protocol.handle('local', async (request) => {
     console.log('Inside local protocol')
@@ -69,7 +68,13 @@ app.whenReady().then(() => {
 
   // Intercept requests and redirect to local protocol
   const filter = {
-    urls: ['*://deadshot.io/weapons/awp/*.webp', '*://deadshot.io/skins/compressed/*.webp', '*://deadshot.io/promo/*.webp', '*://deadshot.io/textures/*.webp'],
+    urls: ['*://deadshot.io/weapons/awp/*.webp', 
+      '*://deadshot.io/weapons/ar2/*.webp', 
+      '*://deadshot.io/weapons/shotgun/*.webp', 
+      '*://deadshot.io/weapons/vector/*.webp', 
+      '*://deadshot.io/skins/compressed/*.webp', 
+      '*://deadshot.io/promo/*.webp', 
+      '*://deadshot.io/textures/*.webp'],
   }
 
   win.webContents.session.webRequest.onBeforeRequest(

@@ -11,43 +11,39 @@ const stats = () => {
 const addStatsDiv = () => {
   try {
     console.log("adding stats div");
+
     const div = document.createElement("div");
+    div.id = "stats";
+    div.style = `
+      position: fixed; 
+      top: 18%; 
+      right: 0; 
+      color: white; 
+      padding: 0.5em; 
+      z-index: 100;
+      background-color: rgba(0, 0, 0, 0.7); 
+      opacity: 1; 
+      transition: opacity 0.5s ease, transform 0.5s ease;
+      cursor: grab; 
+      user-select: none; 
+      border-radius: 8px;
+      width: max-content; /* Prevents width issues */
+    `;
+
     div.innerHTML = `
-    <div id="stats" style="position: fixed; top: 18%; right: 0; color: white; padding: 0.5em; z-index:100;background-color: rgba(0, 0, 0, 0.7);opacity: 1; transition: opacity 0.5s ease, transform 0.5s ease;">
-      <div style="color:red; font-size:1.5vw;font-family: Protest Guerrilla, sans-serif;">
-      FPS: <span id="fps">0</span>
+      <div style="color:red; font-size:1.5vw; font-family: Protest Guerrilla, sans-serif;">
+        FPS: <span id="fps">0</span>
       </div>
-      <div style="color:#5dc9ff; font-size:1.5vw;font-family: Protest Guerrilla, sans-serif;display:flex;align-items:flex-start">
-      Memory: <span id="memory">N/A</span>
-      <span style="font-size:0.5rem">MB</span> 
+      <div style="color:#5dc9ff; font-size:1.5vw; font-family: Protest Guerrilla, sans-serif; display:flex;align-items:flex-start">
+        Memory: <span id="memory">N/A</span> <span style="font-size:0.5rem">MB</span> 
       </div>
-      <div style="color:#ceff5d; font-size:1.5vw;font-family: Protest Guerrilla, sans-serif;">Ping: <span id="ping">N/A</span> </div>
-    </div>
-    <button class="show" style="display: absolute; position: absolute; z-index: 999; top: 32%; right: 1%;">
-       <?xml version="1.0" encoding="utf-8"?>
-        <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M21.335 11.4069L22.2682 11.0474L21.335 11.4069ZM21.335 12.5932L20.4018 12.2337L21.335 12.5932ZM2.66492 11.4068L1.73175 11.0474L2.66492 11.4068ZM2.66492 12.5932L1.73175 12.9526L2.66492 12.5932ZM3.5981 11.7663C4.89784 8.39171 8.17084 6 12 6V4C7.31641 4 3.31889 6.92667 1.73175 11.0474L3.5981 11.7663ZM12 6C15.8291 6 19.1021 8.39172 20.4018 11.7663L22.2682 11.0474C20.681 6.92668 16.6835 4 12 4V6ZM20.4018 12.2337C19.1021 15.6083 15.8291 18 12 18V20C16.6835 20 20.681 17.0733 22.2682 12.9526L20.4018 12.2337ZM12 18C8.17084 18 4.89784 15.6083 3.5981 12.2337L1.73175 12.9526C3.31889 17.0733 7.31641 20 12 20V18ZM20.4018 11.7663C20.4597 11.9165 20.4597 12.0835 20.4018 12.2337L22.2682 12.9526C22.5043 12.3396 22.5043 11.6604 22.2682 11.0474L20.4018 11.7663ZM1.73175 11.0474C1.49567 11.6604 1.49567 12.3396 1.73175 12.9526L3.5981 12.2337C3.54022 12.0835 3.54022 11.9165 3.5981 11.7663L1.73175 11.0474Z" fill="#000000"/>
-        <circle cx="12" cy="12" r="3" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-     </svg> 
-    </button>  
-  
+      <div style="color:#ceff5d; font-size:1.5vw; font-family: Protest Guerrilla, sans-serif;">
+        Ping: <span id="ping">N/A</span>
+      </div>
+    `;
 
-  `;
     document.body.appendChild(div);
-    const showBtn = document.querySelector(".show");
-    const stats = document.querySelector("#stats");
-
-    showBtn.style.border = 'none';
-    showBtn.style.borderRadius = '2px'; 
-    showBtn.addEventListener('click', () => {
-      if (stats.style.opacity === '1') {
-        stats.style.opacity = '0';
-        stats.style.transform = 'translateX(100%)'; 
-      } else {
-        stats.style.opacity = '1';
-        stats.style.transform = 'translateX(0)';
-      }
-    });
+    makeDraggable(div);
 
     createIpcChannels();
     console.log("Ipc channels created");
@@ -55,6 +51,53 @@ const addStatsDiv = () => {
     console.error(e);
   }
 };
+
+function makeDraggable(element) {
+  let offsetX = 0, offsetY = 0, mouseX = 0, mouseY = 0;
+  let isDragging = false;
+
+  element.onmousedown = (e) => {
+    e.preventDefault();
+    isDragging = true;
+    
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+
+    document.onmousemove = (event) => {
+      if (!isDragging) return;
+      event.preventDefault();
+
+      offsetX = event.clientX - mouseX;
+      offsetY = event.clientY - mouseY;
+
+      element.style.top = `${element.offsetTop + offsetY}px`;
+      element.style.left = `${element.offsetLeft + offsetX}px`;
+
+      mouseX = event.clientX;
+      mouseY = event.clientY;
+    };
+
+    document.onmouseup = () => {
+      isDragging = false;
+      document.onmousemove = null;
+      document.onmouseup = null;
+      snapToEdge(element); // Snap to edge when released
+    };
+  };
+}
+
+function snapToEdge(element) {
+  const screenWidth = window.innerWidth;
+  const elementX = element.offsetLeft;
+  const threshold = screenWidth * 0.5; // Middle of screen
+
+  if (elementX < threshold) {
+    element.style.left = "0px"; // Snap to left
+  } else {
+    element.style.left = `${screenWidth - element.offsetWidth}px`; // Snap to right
+  }
+}
+
 const createIpcChannels = () => {
   ipcRenderer.on("memory", (event, data) => {
     document.getElementById("memory").innerHTML = data;

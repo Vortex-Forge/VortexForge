@@ -1,0 +1,77 @@
+Learning: 
+1. dont start writing your shit before thinking idiot!
+
+Current:
+1. Splash screen toggle
+
+To do: 
+1. Make sure that all the unnecessary files (e.g statsUI.html, logo.html) should be deleted
+2. Write code your way, at the end, all of the code will be given to gpt for performance improvement
+3. files to be sent for performance improvement: settings, stats, preload, 
+4. Change the package.json appID team name
+5. Configure package.json properly while building beta
+6. After the cli is ready, host tourneys in the same server
+7. Code a web to advertise the cli with heavy animations and js libs 
+8. Eye posture
+9. To see where which part is located, use quasar's default skins 
+
+Features:
+1. You can add an option that will replace the legendary skins 
+2. You can add wasd keyboard overlay
+3. Add masterClass skin bundle as royal bundle in ds. It should be distributed as LIMITED EDITION. Has to do minor change  
+4. Option to swap legendary skins
+5. Emoji sending (requires web socket)
+6. Team chats (requires web socket)
+7. UI changes
+8. Aim trainer (gotta find out how to do it)
+9. Discord RPC
+10. Map changes
+11. Sound swapping (headshottt - says a lady) (Modern gun reload and shooting sounds)
+12. Seasonal Update (approach - either by updating cli on 31st for new year eve or by checking date everytime cli is opened | Updates for winter and all that too)
+13. Clan chats
+14. All userscripts as features and their toggling. 
+15. Auto-update
+
+Extra_shits:
+Crosshair overlay and crosshair override (like the smg crosshair sucks)
+wallpaper loader as seperate option (also the option to disable wallpaper movement)
+adblocker and no sniper overlay for own build (only for people that worked on the project, not for the official build. sniper overlay must have an option to get turned off)
+resource swapper like quasars is good but we need all the player textures not just mr. shotgun
+better keystrokes (old ones didnt recognize for example alt as sneak)
+uncap fps
+set resolution (by pixel)
+custom kill and shooting sound option (old one had sum weird script which made sum of the shooting sounds sound different than the original file and pitched the killsound way higher with every next kill in a killstreak. Quasar give u the option to change sounds, just that script would need to be disabled or smth)
+renew clan tag document, include cum (Z is the only true leader)
+working gg button (idk if its just me but shit never worked)
+chat color per level in the server -> recruit green, corporal red, distinguished gold, booster pink, epic gamer gold, owner blue
+no invite thingy, it sucks
+ability to copy paste from clipboard into the chat, cant do that in quasar
+clicking links in chat opens the website
+all the customization should be in one customization tab in the menu, one option could also be to load a simple nightsky as the skybox. uk u can make custom ones but u get the simple option to choose between day and night.
+lil window on the lobbypage that shows the playercount in each region, gotta be able to turn that and the existing overall playercount off
+shortcut to reload resources. just like in minecraft with f3 + t. makes it more practical when ur working on a resourcepack
+a document to edit ingame colors, like enemy highlight color, seperately in hex code
+more sound options: 
+- choose the loudness of ur own gun
+- loudness of other players guns
+- loudness of ur own footsteps
+- loudness of enemy footsteps
+
+Bugs:
+When the DOM content is loaded and then after request for some resources is made, then they arent replaced by our resources...
+Settings doesnt change due to overrides
+Performance
+
+Completed:
+1. Logo for the cli
+2. Basic resource swapper (now detail it with things like custom skin replacement and even for legendary ones)
+3. Adblocker
+4. Vf mode
+5. Sniper mode
+
+Approach to enable features:
+We could do the same. we should make a menu that has many features. Since we cant directly modify the deadshot source code we can at least add our own code to the game. So we could then configure our features from the menu. It's like menu adds all the features to the game that you wanna have.
+
+How to add features:
+We gonna have JS code for every feature that will be enabled by the menu.
+For the HTML feature (that requires external rendering) we will add our HTML files to it.

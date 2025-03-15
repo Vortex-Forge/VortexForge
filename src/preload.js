@@ -4,57 +4,42 @@
 // https://www.electronjs.org/docs/latest/tutorial/process-model#preload-scripts
 
 const { addStatsDiv, stats, addFontLinks } = require('./components/stats')
-const { ipcRenderer, contextBridge } = require('electron')
-const { getPing } = require('./components/statsLogic')
-// adBlocker (for devs only)
+const { ipcRenderer } = require('electron');
+const { getPing } = require('./components/statsLogic');
+const { settingUpdate } = require('./components/settings.js');
 
 function blockAds() {
-  setInterval(function () {
-    const bannerHome1 = document.querySelector('#banner-home')
-    const bannerHome2 = document.querySelector('#banner-home2')
-    const bannerReswawn1 = document.querySelector('#banner-respawn-1')
-    const bannerRespawn2 = document.querySelector('#banner-respawn-2')
-    if (bannerHome1) {
-      bannerHome1.style.display = 'none'
-    }
-    if (bannerHome2) {
-      bannerHome2.style.display = 'none'
-    }
-    if (bannerReswawn1) {
-      bannerReswawn1.style.display = 'none'
-    }
-    if (bannerRespawn2) {
-      bannerRespawn2.style.display = 'none'
-    }
-  }, 500)
+  const observer = new MutationObserver(() => {
+    ['#banner-home', '#banner-home2', '#banner-respawn-1', '#banner-respawn-2'].forEach(selector => {
+      const ad = document.querySelector(selector);
+      if (ad) ad.style.display = 'none';
+    });
+  });
+
+  observer.observe(document.body, { childList: true, subtree: true });
 }
 
-document.addEventListener('DOMContentLoaded', function () {
-  console.log('DOMContentLoaded')
-  addFontLinks()
-  ipcRenderer.on('status', function (event, status) {
-    console.log('status received:', status)
-    if (status) {
-      console.log('Electron is ready')
-      try {
-        blockAds()
-      } catch (error) {
-        console.error('Error in blockAds:', error)
-      }
+function waitForSettingsToLoad(callback) {
+    const interval = setInterval(() => {
+        const leftHand = document.querySelector('#lefthand');
+        const masterVol = document.querySelector('#volume');
 
-      try {
-        addStatsDiv()
-      } catch (error) {
-        console.error('Error in addStatsDiv:', error)
-      }
+        if (leftHand && masterVol) {
+            clearInterval(interval); // Stop checking
+            callback(); // Execute function once elements exist
+        }
+    }, 300); 
+}
 
-      try {
-        console.log('running stats')
-        stats()
-        getPing()
-      } catch (error) {
-        console.error('Error in stats:', error)
-      }
-    }
-  })
-})
+window.addEventListener('load', () => {
+    console.log('Starting Electron app...');
+    
+    blockAds();
+    addStatsDiv();
+    console.log('Running Stats...');
+    stats();
+    getPing();
+
+    console.log('Waiting for Settings to Load...');
+    waitForSettingsToLoad(settingUpdate)
+});
