@@ -45,7 +45,7 @@ const createWindow = () => {
 app.whenReady().then(() => {
   let win = createWindow()
   console.log('App is ready, going to replace resources')
-  win.webContents.openDevTools(); 
+  // open devtools here 
   // Register a custom protocol to serve local files
   protocol.handle('local', async (request) => {
     console.log('Inside local protocol')
