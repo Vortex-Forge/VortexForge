@@ -20,7 +20,7 @@ const addStatsDiv = () => {
       right: 0; 
       color: white; 
       padding: 0.5em; 
-      z-index: 100;
+      z-index: 999;
       background-color: rgba(0, 0, 0, 0.7); 
       opacity: 1; 
       transition: opacity 0.5s ease, transform 0.5s ease;

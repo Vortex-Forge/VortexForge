@@ -3,6 +3,7 @@ Learning:
 
 Current:
 1. Splash screen toggle
+2. Copy as many functionalities as you can from other clients
 
 To do: 
 1. Make sure that all the unnecessary files (e.g statsUI.html, logo.html) should be deleted
@@ -14,6 +15,8 @@ To do:
 7. Code a web to advertise the cli with heavy animations and js libs 
 8. Eye posture
 9. To see where which part is located, use quasar's default skins 
+10. Add border and do stuff to make neon glow more classic 
+11. Make matrix
 
 Features:
 1. You can add an option that will replace the legendary skins 
@@ -31,6 +34,7 @@ Features:
 13. Clan chats
 14. All userscripts as features and their toggling. 
 15. Auto-update
+16. Weapon swapper
 
 Extra_shits:
 Crosshair overlay and crosshair override (like the smg crosshair sucks)
