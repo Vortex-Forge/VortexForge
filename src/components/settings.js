@@ -13,11 +13,15 @@ let autoFireInterval = null;
 
 function settingUpdate() {
     // Removes unnecessary settings
-    const leftHand = document.querySelector('#lefthand')?.closest('.setting');
-    const masterVol = document.querySelector('#volume')?.closest('.setting');
-    if (leftHand && masterVol) {
-        leftHand.remove();
-        masterVol.remove();
+    const leftHand = document.querySelector('#lefthand').closest('.setting');
+    const masterVol = document.querySelector('#volume').closest('.setting');
+    const toggleADS = document.querySelector('#toggleads').closest('.setting'); 
+    const mouseInput = document.querySelector('#rawmouse').closest('.setting'); 
+    if (leftHand && masterVol && toggleADS && mouseInput) {
+        leftHand.style.display = 'none';
+        masterVol.style.display = 'none';
+        toggleADS.style.display = 'none'; 
+        mouseInput.style.display = 'none'; 
         console.log("Removed unwanted rubbish");
     }
 
@@ -37,12 +41,16 @@ function settingUpdate() {
             <span></span>
         </label>
     </div>
-    <div class="setting toggle" style="padding: 9px 30px; background-color: rgba(255, 255, 255, 0.03);">
+    <div class="setting toggle" style="padding: 9px 30px;">
         <p style="font-size: 21px;">FPS Booster</p>
         <label>
             <input id="fpsBooster" class="checkbox" type="checkbox">
             <span></span>
         </label>
+    </div>
+     <div class="setting toggle" style="padding: 9px 30px; background-color: rgba(255, 255, 255, 0.03);">
+        <p style="font-size: 21px;">Search My Rank</p>
+        <button id="searchRankButton" style="padding: 5px 10px; font-size: 16px; cursor: pointer;">Search</button>
     </div>`
     ;
 
@@ -72,6 +80,11 @@ function settingUpdate() {
         configs.fpsBooster = !configs.fpsBooster;
         applyFpsBooster(); // Apply FPS boost immediately when toggled
     });
+
+    const rankSearch = document.getElementById('searchRankButton')
+    rankSearch.addEventListener('click', () => {
+        createSearchPopup(); 
+    })  
 }
 
 // FPS Booster logic 
@@ -224,6 +237,107 @@ function setupFpsBoosterObserver() {
 // Initialize the FPS booster observer when the module loads
 setTimeout(setupFpsBoosterObserver, 5000);
 
+
+     function createSearchPopup() {
+        const popup = document.createElement('div');
+        popup.style.position = 'fixed';
+        popup.style.top = '50%';
+        popup.style.left = '50%';
+        popup.style.transform = 'translate(-50%, -50%)';
+        popup.style.backgroundColor = 'rgba(0, 0, 0, 0.9)';
+        popup.style.padding = '20px';
+        popup.style.borderRadius = '10px';
+        popup.style.color = 'white';
+        popup.style.zIndex = '10000';
+
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.placeholder = 'Enter username';
+        input.style.padding = '10px';
+        input.style.fontSize = '16px';
+        input.style.marginRight = '10px';
+
+        const searchButton = document.createElement('button');
+        searchButton.innerText = 'Search';
+        searchButton.style.padding = '10px';
+        searchButton.style.fontSize = '16px';
+        searchButton.style.cursor = 'pointer';
+
+        const closeButton = document.createElement('button');
+        closeButton.innerText = 'Close';
+        closeButton.style.marginLeft = '10px';
+        closeButton.style.padding = '10px';
+        closeButton.style.fontSize = '16px';
+        closeButton.style.cursor = 'pointer';
+
+        closeButton.onclick = () => popup.remove();
+        searchButton.onclick = async () => {
+            const username = input.value.trim();
+            if (username) {
+                const rank = await fetchLeaderboardRank(username);
+                showRankPopup(username, rank);
+            }
+        };
+
+        popup.appendChild(input);
+        popup.appendChild(searchButton);
+        popup.appendChild(closeButton);
+        document.body.appendChild(popup);
+    }
+
+ async function fetchLeaderboardRank(username) {
+    try {
+        const response = await fetch('https://login.deadshot.io/leaderboards');
+        const data = await response.json();
+
+        const categories = ["daily", "weekly", "alltime"];
+
+        for (const category of categories) {
+            if (data[category] && data[category].kills) {
+                const leaderboard = data[category].kills;
+
+                leaderboard.sort((a, b) => b.kills - a.kills);
+
+                const player = leaderboard.find(player => player.name === username);
+
+                if (player) {
+                    const rank = leaderboard.indexOf(player);
+                    return `Rank: ${rank + 1} in ${category} leaderboard`;
+                }
+            }
+        }
+
+        return 'Not found in any leaderboard';
+    } catch (error) {
+        console.error('Error fetching leaderboard:', error);
+        return 'Error';
+    }
+}
+
+    function showRankPopup(username, rank) {
+        const popup = document.createElement('div');
+        popup.style.position = 'fixed';
+        popup.style.top = '70%';
+        popup.style.left = '50%';
+        popup.style.transform = 'translate(-50%, -70%)';
+        popup.style.backgroundColor = 'rgba(0, 0, 0, 0.9)';
+        popup.style.padding = '20px';
+        popup.style.borderRadius = '10px';
+        popup.style.color = 'white';
+        popup.style.zIndex = '10000';
+        popup.innerText = rank === 'Not found' ? `User ${username} not found in the leaderboard.` : `User ${username} is ranked #${rank}`;
+
+        const closeButton = document.createElement('button');
+        closeButton.innerText = 'Close';
+        closeButton.style.marginTop = '10px';
+        closeButton.style.padding = '10px';
+        closeButton.style.fontSize = '16px';
+        closeButton.style.cursor = 'pointer';
+        closeButton.onclick = () => popup.remove();
+
+        popup.appendChild(closeButton);
+        document.body.appendChild(popup);
+    }
+
 module.exports = { settingUpdate, configs };
-window.configs = configs;
 

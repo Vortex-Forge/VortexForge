@@ -4,6 +4,9 @@ Learning:
 Current:
 1. Splash screen toggle
 2. Copy as many functionalities as you can from other clients
+3. Make skins crazy af like quasar!
+4. Jo tum mere ho
+5. Apna bana le
 
 To do: 
 1. Make sure that all the unnecessary files (e.g statsUI.html, logo.html) should be deleted
@@ -17,6 +20,7 @@ To do:
 9. To see where which part is located, use quasar's default skins 
 10. Add border and do stuff to make neon glow more classic 
 11. Make matrix
+12. Extract good features from quasar like wasd and rpc like that from /src
 
 Features:
 1. You can add an option that will replace the legendary skins 
@@ -63,8 +67,9 @@ more sound options:
 
 Bugs:
 When the DOM content is loaded and then after request for some resources is made, then they arent replaced by our resources...
-Settings doesnt change due to overrides
 Performance
+The configs set in configs obj arent stored forever
+
 
 Completed:
 1. Logo for the cli
@@ -72,6 +77,7 @@ Completed:
 3. Adblocker
 4. Vf mode
 5. Sniper mode
+6. Fps booster 
 
 Approach to enable features:
 We could do the same. we should make a menu that has many features. Since we cant directly modify the deadshot source code we can at least add our own code to the game. So we could then configure our features from the menu. It's like menu adds all the features to the game that you wanna have.

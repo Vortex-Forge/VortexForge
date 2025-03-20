@@ -10,7 +10,7 @@ const stats = () => {
 
 const addStatsDiv = () => {
   try {
-    console.log("adding stats div");
+    console.log("Adding stats div");
 
     const div = document.createElement("div");
     div.id = "stats";
@@ -31,13 +31,13 @@ const addStatsDiv = () => {
     `;
 
     div.innerHTML = `
-      <div style="color:red; font-size:1.5vw; font-family: Protest Guerrilla, sans-serif;">
+      <div style="color:white; font-size:1vw; font-family: sans-serif; font-weight: 900;">
         FPS: <span id="fps">0</span>
       </div>
-      <div style="color:#5dc9ff; font-size:1.5vw; font-family: Protest Guerrilla, sans-serif; display:flex;align-items:flex-start">
+      <div style="color:white; font-size:1vw; font-family: sans-serif; font-weight: 900; display:flex; align-items:flex-start">
         Memory: <span id="memory">N/A</span> <span style="font-size:0.5rem">MB</span> 
       </div>
-      <div style="color:#ceff5d; font-size:1.5vw; font-family: Protest Guerrilla, sans-serif;">
+      <div style="color:white; font-size:1vw; font-family: sans-serif; font-weight: 900;">
         Ping: <span id="ping">N/A</span>
       </div>
     `;
